@@ -6,9 +6,13 @@ import (
 	"encoding/hex"
 )
 
+const (
+	HashLen = 32
+)
+
 func Compute(data []byte) []byte {
 	hash := sha256.Sum256(data)
-	return ToHex(hash[:])
+	return hash[:]
 }
 
 func ComputeHMAC(message, secret []byte) ([]byte, error) {
@@ -19,11 +23,22 @@ func ComputeHMAC(message, secret []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	return ToHex(h.Sum(nil)), nil
+	return h.Sum(nil), nil
 }
 
-func ToHex(hash []byte) []byte {
+func HexEncode(hash []byte) []byte {
 	bs := make([]byte, hex.EncodedLen(len(hash)))
 	hex.Encode(bs, hash)
 	return bs
+}
+
+func HexDecode(hash []byte) ([]byte, error) {
+	bs := make([]byte, hex.DecodedLen(len(hash)))
+
+	_, err := hex.Decode(bs, hash)
+	if err != nil {
+		return nil, err
+	}
+
+	return bs, nil
 }
