@@ -3,7 +3,6 @@ package sha256
 import (
 	"crypto/hmac"
 	"crypto/sha256"
-	"encoding/hex"
 )
 
 const (
@@ -24,21 +23,4 @@ func ComputeHMAC(message, secret []byte) ([]byte, error) {
 	}
 
 	return h.Sum(nil), nil
-}
-
-func HexEncode(hash []byte) []byte {
-	bs := make([]byte, hex.EncodedLen(len(hash)))
-	hex.Encode(bs, hash)
-	return bs
-}
-
-func HexDecode(hash []byte) ([]byte, error) {
-	bs := make([]byte, hex.DecodedLen(len(hash)))
-
-	_, err := hex.Decode(bs, hash)
-	if err != nil {
-		return nil, err
-	}
-
-	return bs, nil
 }
